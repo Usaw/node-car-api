@@ -3,6 +3,7 @@ const post = require('./post');
 const {getBrands} = require('node-car-api');
 const {getModels} = require('node-car-api');
 const fs = require('fs');
+var brandModels = require('./brands.json');
 //var express = require('express');
 //var request = require('request');
 //var cheerio = require('cheerio');
@@ -56,14 +57,27 @@ printBrands();
 
 
 
-/*async function printModels () {
-  const models = await getModels('PEUGEOT');
-  console.log("models: ");
-    console.log(models);
+async function printModels () {
+  for (var i = 0; i < brandModels.length; i++) {
+    const models = await getModels(brandModels[i]);
+    console.log("models: ");
+      console.log(models);
+      try{
+        fs.appendFile('models.json', JSON.stringify(models, null, 4), function(err)
+                              {
+                                  console.log('written in models.json.');
+                              });
+      }
+      catch(e){
+        return Promise.reject(e);
+      }
+    brandModels[i]
+  }
+
 
 }
 
-printModels();*/
+printModels();
 /*fs.writeFile('brands.json', JSON.stringify(json, null, 4), function(err)
                       {
                           console.log('Success.');
